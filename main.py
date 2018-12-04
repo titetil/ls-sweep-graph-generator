@@ -8,16 +8,17 @@ import numpy.core.defchararray as np_f
 def main():
     data_dir = raw_input("Enter data directory path:  ")
     resistor = raw_input("Enter resistor value:  ")
+    y_axis_max = raw_input("Enter y-axis max:  ")
     for path, subdirs, files in os.walk(data_dir):
         for file in files:
             file_path = os.path.join(data_dir, file)
             file_name = file.split('.')[0]
             is_csv = True if file.split('.')[1] == 'csv' else False
             if is_csv:
-                create_graph(file_path, resistor)
+                create_graph(file_path, resistor, y_axis_max)
 
 
-def create_graph(file_path, resistor):
+def create_graph(file_path, resistor, y_axis_max):
     fig, ax = plt.subplots()
 
     file_name = os.path.basename(file_path).split('.')[0]
@@ -34,6 +35,7 @@ def create_graph(file_path, resistor):
         ls_ohms = ls_volts / ((ps_volts - ls_volts) / float(resistor))
 
         ax.set_xlim([0, sp_height_rel.max()])
+        ax.set_ylim([0, float(y_axis_max)])
         ax.plot(sp_height_rel, ls_ohms, linewidth=0.1)
         ax.set_xlabel('Height (mm)', fontsize=7)
         ax.set_ylabel('LS Resistance (ohms)', fontsize=7)
@@ -51,6 +53,7 @@ def create_graph(file_path, resistor):
         ls_ohms = ls_volts / ((ps_volts - ls_volts) / float(resistor))
 
         ax.set_xlim([0, ls_time.max()])
+        ax.set_ylim([0, float(y_axis_max)])
         ax.plot(ls_time, ls_ohms, linewidth=0.1)
         ax.set_xlabel('Time (sec)', fontsize=7)
         ax.set_ylabel('LS Resistance (ohms)', fontsize=7)
@@ -77,7 +80,7 @@ def make_pdf(file_path):
 
 if __name__ == "__main__":
 
-    #create_graph(r'C:\Data\CA2018-2882 Post IR 7.4.3 Wet Test Raw Data\MS 1_a.csv', '319.8')
+    #create_graph(r'C:\Data\Dry Test\MS 1_a.csv', '319.8', '300')
     #create_graph(r'C:\Data\CA2018-2882 Post IR 7.4.1 Dry Test Raw Data\MS 1_a.csv', '319.8')
 
     main()
